@@ -1,5 +1,6 @@
 class MoviesController < ApplicationController
-
+  
+  
   def show
     id = params[:id] # retrieve movie ID from URI route
     @movie = Movie.find(id) # look up movie by unique ID
@@ -7,12 +8,12 @@ class MoviesController < ApplicationController
   end
 
   def index
-    if session[:issorted]=~ /^title$/
-      @movies = Movie.find(:all).order('title')
-    elsif session[:issorted]=~ /^release_date$/
-      @movies = Movie.find(:all).order('release_date')
-    end
-    @movies = Movie.all
+#if params[:sort]!= nil
+      @movies = Movie.order(params[:sort])
+      @hash = header_class(params[:sort])
+#   else
+#   @movies = Movie.all
+#   end
   end
   def new
     # default: render 'new' template
@@ -42,4 +43,14 @@ class MoviesController < ApplicationController
     redirect_to movies_path
   end
 
+  def header_class(header)
+    hash = Hash.new(0)
+    if header == "title"
+      return hash = {:title => "hilite", :release_date => nil}
+    elsif header == "release_date"
+      return hash = {:title => nil, :release_date => "hilite"}
+    else
+      return hash = {:title => nil, :release_date => nil}
+    end
+  end
 end
