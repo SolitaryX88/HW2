@@ -7,9 +7,13 @@ class MoviesController < ApplicationController
   end
 
   def index
+    if session[:issorted]=~ /^title$/
+      @movies = Movie.find(:all).order('title')
+    elsif session[:issorted]=~ /^release_date$/
+      @movies = Movie.find(:all).order('release_date')
+    end
     @movies = Movie.all
   end
-
   def new
     # default: render 'new' template
   end
